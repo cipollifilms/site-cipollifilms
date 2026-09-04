@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CipolliFilms — Vídeos Imobiliários</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink: #0B0B0B;
+    --paper: #F0F1F0;
+    --paper-soft: #E6E8E6;
+    --charcoal: #14181C;
+    --charcoal-soft: #1B2024;
+    --gold: #B9B4A6;
+    --gold-soft: #D8D4C8;
+    --line-light: rgba(11,11,11,0.13);
+    --line-dark: rgba(250,249,246,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Sora',sans-serif;font-weight:600;letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;font-size:11px;color:#5C5648;}
+  a{color:inherit;text-decoration:none;}
+
+  /* THEME: dark sections */
+  .dark-section{background:var(--charcoal);color:var(--paper);}
+  .dark-section .mono{color:var(--gold-soft);}
+  .dark-section .section-head p{color:var(--paper);opacity:0.65;}
+  .dark-section .btn.ghost{border-color:var(--paper);}
+  .dark-section .btn.ghost:hover{background:rgba(250,249,246,0.08);}
+  .dark-section .tc-time{color:var(--gold);}
+  .dark-section .service-row,.dark-section .timecode-rail-inner{border-color:var(--line-dark);}
+  .dark-section .desc{color:var(--paper);opacity:0.62;}
+  .dark-section .tag{border-color:var(--line-dark);}
+  .dark-section .tag.primary{border-color:var(--gold);color:var(--gold);}
+  .dark-section .testi-name{color:var(--paper);opacity:0.6;}
+  .dark-section .pf-overlay{background:linear-gradient(0deg, rgba(0,0,0,0.85), transparent 70%);}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:24px 5vw;
+    mix-blend-mode:difference;
+  }
+  .logo{font-family:'Sora',sans-serif;font-size:18px;font-weight:600;letter-spacing:-0.01em;color:#fff;display:flex;align-items:center;gap:8px;}
+  .nav-logo-icon{height:22px;width:auto;display:block;}
+  .footer-logo-icon{height:20px;width:auto;display:block;}
+  .logo span{color:var(--gold-soft);}
+  .navlinks{display:flex;gap:32px;font-size:13px;color:#fff;}
+  .navlinks a{opacity:0.85;transition:opacity .25s;}
+  .navlinks a:hover{opacity:1;}
+  .nav-cta{color:#fff;border:1px solid #fff;padding:9px 18px;font-size:12px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.06em;}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:6px;z-index:60;}
+  .hamburger span{width:24px;height:2px;background:#fff;display:block;}
+  .mobile-menu{
+    display:none;position:fixed;top:0;right:0;bottom:0;width:70vw;max-width:300px;
+    background:var(--charcoal);z-index:59;padding:90px 30px 30px;flex-direction:column;gap:24px;
+    transform:translateX(100%);transition:transform .3s ease;
+  }
+  .mobile-menu.open{transform:translateX(0);}
+  .mobile-menu a{color:#fff;font-family:'Sora',sans-serif;font-size:16px;}
+
+  /* HERO — vídeo full-bleed com reveal de baixo pra cima */
+  .hero{
+    position:relative;height:100vh;min-height:560px;overflow:hidden;
+    display:flex;align-items:flex-end;
+    background:var(--charcoal);
+  }
+  .hero-video{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;
+  }
+  .hero-scrim{
+    position:absolute;inset:0;z-index:2;
+    background:
+      linear-gradient(180deg, rgba(20,24,28,0.55) 0%, rgba(20,24,28,0.35) 40%, rgba(20,24,28,0.85) 100%);
+  }
+  .hero-curtain{
+    position:absolute;inset:0;z-index:6;background:var(--charcoal);
+    animation:curtainReveal 1.5s cubic-bezier(.65,0,.2,1) forwards;
+    animation-delay:0.15s;pointer-events:none;
+  }
+  @keyframes curtainReveal{
+    from{ clip-path:inset(0 0 0 0); }
+    to{ clip-path:inset(0 0 100% 0); }
+  }
+  .hero-inner{position:relative;z-index:3;padding:0 5vw 90px;max-width:900px;}
+  .hero .mono{margin-bottom:20px;display:block;}
+  .hero h1{font-size:clamp(38px,5.6vw,72px);line-height:1.04;font-weight:600;color:var(--ink);max-width:840px;}
+  .hero h1 span{color:var(--gold);}
+  .hero p{margin-top:24px;font-size:16px;max-width:440px;line-height:1.65;opacity:0.68;}
+  .hero-actions{margin-top:36px;display:flex;gap:16px;align-items:center;}
+  .btn{
+    display:inline-block;padding:15px 30px;border:1px solid var(--ink);
+    font-size:12px;letter-spacing:0.08em;text-transform:uppercase;font-family:'IBM Plex Mono',monospace;
+    transition:all .3s;color:var(--ink);
+  }
+  .btn.solid{background:var(--gold);color:var(--ink);border-color:var(--gold);}
+  .btn.solid:hover{background:var(--gold-soft);border-color:var(--gold-soft);}
+  .btn.ghost:hover{background:rgba(11,11,11,0.06);}
+  .hero-photo{
+    margin-top:60px;width:100%;aspect-ratio:21/9;overflow:hidden;
+    background:url('assets/image-01.jpg') center/cover;
+  }
+
+  /* TRUST BAR */
+  .trust-bar{
+    display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    padding:44px 5vw;
+  }
+  .trust-item{flex:1;min-width:150px;text-align:center;}
+  .trust-num{font-family:'Sora',sans-serif;font-size:clamp(24px,2.6vw,32px);font-weight:700;color:var(--gold);}
+  .trust-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.75;margin-top:6px;}
+
+  /* TIMECODE RAIL — signature element */
+  .timecode-rail-inner{
+    display:flex;align-items:center;padding:0 5vw;
+    border-top:1px solid var(--line-dark);border-bottom:1px solid var(--line-dark);
+  }
+  .tc-stop{flex:1;padding:22px 0;text-align:center;position:relative;}
+  .tc-stop:not(:last-child)::after{
+    content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);
+    width:1px;height:20px;background:var(--line-dark);
+  }
+  .tc-time{display:block;font-family:'IBM Plex Mono',monospace;font-size:13px;margin-bottom:4px;}
+  .tc-label{font-size:11px;letter-spacing:0.06em;text-transform:uppercase;opacity:0.68;}
+
+  section{padding:110px 5vw;}
+  .section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;gap:30px;flex-wrap:wrap;}
+  .section-head h2{font-size:clamp(28px,3.2vw,46px);max-width:600px;}
+  .section-head p{max-width:340px;font-size:14px;line-height:1.6;opacity:0.65;}
+
+  /* PORTFOLIO */
+  .portfolio-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;}
+  .pf-card{position:relative;overflow:hidden;border-radius:2px;aspect-ratio:4/5;}
+  .pf-card.wide{aspect-ratio:16/10;}
+  .pf-card img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(0.95) contrast(1.02);transition:transform .8s cubic-bezier(.2,.8,.2,1);}
+  .pf-card:hover img{transform:scale(1.06);}
+  .pf-overlay{
+    position:absolute;left:0;right:0;bottom:0;padding:22px;
+    background:linear-gradient(0deg, rgba(11,11,11,0.85), transparent 70%);
+  }
+  .pf-overlay .mono{margin-bottom:6px;color:var(--gold-soft);}
+  .pf-overlay h3{font-size:19px;color:#fff;}
+  .pf-col{display:flex;flex-direction:column;gap:22px;}
+
+  /* PORTFOLIO v2 — carousel cards */
+  .portfolio-grid-v2{display:grid;grid-template-columns:1fr;gap:22px;margin-bottom:22px;}
+  .pf-carousel{position:relative;aspect-ratio:21/9;overflow:hidden;border-radius:2px;background:var(--charcoal);}
+  .pf-carousel-img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+    opacity:0;transition:opacity 1.1s ease;filter:saturate(0.95) contrast(1.02);
+  }
+  .pf-carousel-img.active{opacity:1;}
+  .pf-dots{position:absolute;top:20px;right:20px;display:flex;gap:6px;z-index:2;}
+  .pf-dots span{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,0.4);transition:background .3s;}
+  .pf-dots span.active{background:#fff;}
+  .pf-nav{
+    position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:38px;height:38px;border-radius:50%;
+    background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.3);color:#fff;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);
+    opacity:0;transition:opacity .25s,background .25s;
+  }
+  .pf-carousel:hover .pf-nav{opacity:1;}
+  .pf-nav:hover{background:rgba(0,0,0,0.65);}
+  .pf-nav-prev{left:16px;}
+  .pf-nav-next{right:16px;}
+  .reels-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;max-width:900px;margin:0 auto;}
+  .pf-video-card{position:relative;aspect-ratio:9/16;overflow:hidden;border-radius:2px;background:#000;}
+
+  .youtube-callout{
+    max-width:700px;margin:50px auto 0;text-align:center;
+    padding:36px 30px;border:1px solid var(--line-light);background:var(--paper-soft);
+  }
+  .youtube-callout h3{font-size:22px;margin:10px 0 12px;}
+  .youtube-callout p{font-size:14px;line-height:1.65;opacity:0.72;max-width:520px;margin:0 auto 22px;}
+  .youtube-callout-btn[aria-disabled="true"]{opacity:0.55;pointer-events:none;cursor:default;}
+  .youtube-embed-wrap{position:relative;width:100%;max-width:640px;margin:0 auto;aspect-ratio:16/9;overflow:hidden;background:#000;}
+  .youtube-embed{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+  /* COMO FUNCIONA */
+  .cf-subhead{font-family:'Sora',sans-serif;font-size:18px;font-weight:600;margin:0 0 26px;}
+  #como-funciona .section-head{margin-bottom:50px;}
+  .glossary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:64px;}
+  .glossary-item{padding:24px;border:1px solid var(--line-light);background:var(--paper-soft);}
+  .glossary-item h4{font-family:'Sora',sans-serif;font-size:17px;font-weight:500;margin:10px 0 10px;}
+  .glossary-item p{font-size:13.5px;line-height:1.6;opacity:0.72;}
+  .glossary-benefit{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-light);opacity:0.85 !important;}
+  .glossary-benefit strong{color:var(--charcoal);font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;}
+  .journey{display:grid;grid-template-columns:repeat(4,1fr);gap:24px 26px;}
+  .journey-step{position:relative;}
+  .journey-step .tc-time{color:#5C5648;}
+  .journey-step h4{font-family:'Sora',sans-serif;font-size:15px;font-weight:500;margin:6px 0 8px;}
+  .journey-step p{font-size:13px;line-height:1.55;opacity:0.7;}
+  .cf-video-placeholder{
+    margin-top:56px;padding:30px;text-align:center;border:1px dashed var(--line-light);
+  }
+  .cf-video-placeholder p{font-size:14px;opacity:0.65;margin-top:8px;}
+
+  .cf-journey-dark{
+    background:var(--charcoal);color:var(--paper);
+    margin:64px calc(-5vw) 0;padding:64px 5vw;
+  }
+  .cf-subhead-dark{color:var(--paper);}
+  .cf-journey-dark .journey-step .tc-time{color:var(--gold-soft);}
+  .cf-journey-dark .journey-step p{color:var(--paper);opacity:0.65;}
+  .cf-journey-dark .cf-video-placeholder{border-color:var(--line-dark);}
+  .cf-journey-dark .cf-video-placeholder .mono{color:var(--gold-soft);}
+  .cf-journey-dark .cf-video-placeholder p{color:var(--paper);opacity:0.6;}
+  @media(max-width:820px){
+    .glossary-grid{grid-template-columns:1fr;}
+    .journey{grid-template-columns:1fr 1fr;}
+  }
+
+  /* FAQ */
+  .faq-list{max-width:760px;margin:0 auto;}
+  .faq-item{border-bottom:1px solid var(--line-light);}
+  .faq-question{
+    width:100%;text-align:left;background:none;border:none;padding:22px 0;cursor:pointer;
+    font-family:'Sora',sans-serif;font-size:16px;font-weight:500;color:var(--ink);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .faq-icon{font-family:'IBM Plex Mono',monospace;font-size:20px;color:#8A8478;transition:transform .25s;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);}
+  .faq-answer{max-height:0;overflow:hidden;transition:max-height .3s ease;}
+  .faq-answer p{padding-bottom:22px;font-size:14px;line-height:1.65;opacity:0.72;max-width:640px;}
+  .faq-item.open .faq-answer{max-height:220px;}
+  .pf-video{width:100%;height:100%;object-fit:cover;display:block;}
+  .mute-btn{
+    position:absolute;bottom:20px;right:20px;z-index:3;width:38px;height:38px;border-radius:50%;
+    background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.3);color:#fff;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(4px);
+  }
+  .mute-btn:hover{background:rgba(0,0,0,0.7);}
+
+  /* SERVICES */
+  .service-row{
+    display:grid;grid-template-columns:56px 260px 1fr auto;gap:22px;align-items:center;
+    padding:24px 0;border-bottom:1px solid var(--line-dark);
+  }
+  .service-row:first-of-type{border-top:1px solid var(--line-dark);}
+  .service-row h3{font-size:22px;font-weight:500;line-height:1.2;}
+  .service-row .desc{font-size:13.5px;line-height:1.55;}
+  .service-row .tag{
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;
+    padding:6px 12px;border:1px solid var(--line-dark);white-space:nowrap;justify-self:end;
+  }
+
+  /* PACKAGES */
+  .pkg-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .pkg-card{
+    background:#fff;border:1px solid var(--line-light);padding:36px 28px;display:flex;flex-direction:column;
+    position:relative;transition:border-color .3s;
+  }
+  .pkg-card.featured{border-color:#8A8478;}
+  .pkg-badge{
+    position:absolute;top:-13px;left:28px;background:var(--gold);color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.06em;text-transform:uppercase;
+    padding:5px 12px;
+  }
+  .pkg-card h3{font-size:21px;margin-bottom:6px;}
+  .pkg-card .pkg-price{font-family:'Sora',sans-serif;font-size:32px;font-weight:700;color:#5C5648;margin:12px 0 18px;}
+  .pkg-card .pkg-price span{font-family:'Inter',sans-serif;font-size:13px;font-weight:300;opacity:0.55;}
+  .pkg-list{list-style:none;margin-bottom:28px;flex:1;}
+  .pkg-list li{font-size:13.5px;opacity:0.7;padding:9px 0;border-top:1px solid var(--line-light);}
+  .pkg-list li:first-child{border-top:none;}
+  .pkg-card .btn{text-align:center;}
+  .pkg-block-label{display:block;margin-bottom:20px;}
+  .pkg-section-divider{height:1px;background:var(--line-light);margin:56px 0 40px;}
+  .pkg-monthly-block .pkg-block-label{margin-bottom:22px;}
+
+  /* Contraste escuro nos destaques da seção de Pacotes */
+  #pacotes .pkg-badge{background:var(--charcoal);color:var(--paper);}
+  #pacotes .pkg-card.featured{border-color:var(--charcoal);}
+  #pacotes .btn.solid{background:var(--charcoal);color:var(--paper);border-color:var(--charcoal);}
+  #pacotes .btn.solid:hover{background:var(--charcoal-soft);border-color:var(--charcoal-soft);}
+
+  .pkg-card-form{grid-column:span 1;}
+  .monthly-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-bottom:36px;}
+  .pkg-form-intro{font-size:13px;line-height:1.6;opacity:0.72;margin-bottom:20px;}
+  .pkg-form{display:flex;flex-direction:column;gap:14px;}
+  .pkg-form label{font-size:12px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.04em;opacity:0.75;display:flex;flex-direction:column;gap:6px;}
+  .pkg-form select,.pkg-form input{
+    font-family:'Inter',sans-serif;font-size:14px;padding:10px 12px;border:1px solid var(--line-light);
+    background:#fff;color:var(--ink);border-radius:2px;text-transform:none;letter-spacing:normal;
+  }
+  .plan-builder{display:flex;flex-direction:column;margin-bottom:26px;}
+  .plan-row{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:14px 0;border-bottom:1px solid var(--line-light);
+  }
+  .plan-row:first-child{border-top:1px solid var(--line-light);}
+  .plan-row-label{font-family:'Inter',sans-serif;font-size:13.5px;color:var(--ink);}
+  .plan-stepper{display:flex;align-items:center;gap:14px;}
+  .plan-btn{
+    width:24px;height:24px;border-radius:50%;border:1px solid var(--line-light);background:none;
+    font-family:'Inter',sans-serif;font-size:15px;line-height:1;color:var(--ink);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;padding:0;transition:border-color .2s,background .2s;
+  }
+  .plan-btn:hover{border-color:var(--ink);background:rgba(11,11,11,0.04);}
+  .plan-value{min-width:16px;text-align:center;font-family:'IBM Plex Mono',monospace;font-size:13px;}
+
+  /* TESTIMONIALS */
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .testi-card{border:1px solid var(--line-dark);padding:30px 26px;}
+  .testi-result{
+    font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:12px;
+    letter-spacing:0.04em;margin-bottom:16px;display:block;
+  }
+  .testi-quote{font-family:'Sora',sans-serif;font-weight:400;font-size:17px;line-height:1.45;margin-bottom:20px;}
+  .testi-name{font-size:12.5px;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:0.04em;}
+  .testi-person{display:flex;align-items:center;gap:12px;}
+  .testi-avatar{
+    width:44px;height:44px;border-radius:50%;flex-shrink:0;overflow:hidden;
+    background:rgba(255,255,255,0.08);border:1px solid var(--line-dark);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Sora',sans-serif;font-weight:600;font-size:14px;color:var(--gold-soft);
+  }
+  .testi-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
+
+  /* ABOUT */
+  .about{display:grid;grid-template-columns:0.9fr 1.1fr;gap:64px;align-items:center;}
+  .about img{width:100%;aspect-ratio:3/4;object-fit:cover;filter:saturate(0.92);}
+  .about-logo-card{
+    width:100%;aspect-ratio:3/4;background:var(--paper-soft);border:1px solid var(--line-light);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .about-logo-img{width:42%;height:auto;}
+  .about .mono{margin-bottom:18px;}
+  .about h2{font-size:clamp(26px,3.2vw,40px);line-height:1.18;margin-bottom:22px;}
+  .about p{font-size:15px;line-height:1.75;opacity:0.7;max-width:460px;}
+  .stat-row{display:flex;gap:46px;margin-top:40px;}
+  .stat-num{font-family:'Sora',sans-serif;font-size:30px;font-weight:700;color:#5C5648;}
+  .stat-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;opacity:0.6;margin-top:4px;}
+
+  /* CTA */
+  .cta{
+    text-align:center;
+    background:
+      linear-gradient(180deg, rgba(27,27,27,0.55), rgba(27,27,27,0.94)),
+      url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1800&auto=format&fit=crop') center/cover;
+  }
+  .cta h2{font-size:clamp(32px,4.6vw,58px);max-width:800px;margin:0 auto 28px;line-height:1.1;color:#fff;}
+  .cta .mono{display:block;margin-bottom:20px;}
+  .cta p{max-width:480px;margin:0 auto 36px;opacity:0.7;font-size:15px;color:#fff;}
+  .cta .btn.solid{background:#fff;color:var(--charcoal);border-color:#fff;}
+  .cta .btn.solid:hover{background:var(--paper);border-color:var(--paper);}
+
+  footer{
+    padding:46px 5vw;display:flex;justify-content:space-between;align-items:center;
+    border-top:1px solid var(--line-light);font-size:12px;opacity:0.6;flex-wrap:wrap;gap:16px;
+  }
+  footer .logo{color:var(--ink);}
+  footer .navlinks{color:var(--ink);}
+
+  @media(max-width:820px){
+    .navlinks{display:none;}
+    .hamburger{display:flex;}
+    .mobile-menu{display:flex;}
+    .portfolio-grid-v2,.pkg-grid,.testi-grid,.reels-row,.monthly-grid{grid-template-columns:1fr;}
+    .about{grid-template-columns:1fr;}
+    .service-row{grid-template-columns:36px 1fr;row-gap:8px;}
+    .service-row .desc{grid-column:2;}
+    .service-row .tag{grid-column:2;justify-self:start;}
+    .timecode-rail-inner{overflow-x:auto;}
+  }
+
+  /* ANIMAÇÕES */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion: reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+  }
+  .pf-carousel, .pf-video-card, .pkg-card{transition:transform .35s ease, box-shadow .35s ease;}
+  .pf-carousel:hover, .pf-video-card:hover{transform:scale(1.015);box-shadow:0 18px 40px rgba(0,0,0,0.25);}
+  .pkg-card:hover{transform:translateY(-6px);box-shadow:0 18px 34px rgba(0,0,0,0.12);}
+  .testi-card{transition:transform .3s ease;}
+  .testi-card:hover{transform:translateY(-4px);}
+  .btn{transition:transform .2s ease, background .3s ease, border-color .3s ease;}
+  .btn:hover{transform:translateY(-2px);}
+  .hero-inner .mono, .hero-inner h1, .hero-inner p, .hero-inner .hero-actions{
+    opacity:0;transform:translateY(18px);animation:heroFadeUp .8s ease forwards;
+  }
+  .hero-inner .mono{animation-delay:1.3s;}
+  .hero-inner h1{animation-delay:1.5s;}
+  .hero-inner p{animation-delay:1.7s;}
+  .hero-inner .hero-actions{animation-delay:1.9s;}
+  @keyframes heroFadeUp{ to{ opacity:1; transform:translateY(0); } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><img src="assets/image-01.png" alt="CipolliFilms" class="nav-logo-icon">cipollifilms</div>
+  <div class="navlinks">
+    <a href="#portfolio">Portfólio</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#como-funciona">Como Funciona</a>
+    <a href="#pacotes">Pacotes</a>
+    <a href="#depoimentos">Depoimentos</a>
+    <a href="#faq">FAQ</a>
+  </div>
+  <a href="#contato" class="nav-cta">Agendar</a>
+  <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#portfolio">Portfólio</a>
+  <a href="#servicos">Serviços</a>
+  <a href="#como-funciona">Como Funciona</a>
+  <a href="#pacotes">Pacotes</a>
+  <a href="#depoimentos">Depoimentos</a>
+  <a href="#faq">Perguntas Frequentes</a>
+  <a href="#contato">Agendar</a>
+</div>
+
+<header class="hero">
+  <div class="hero-curtain"></div>
+  <video class="hero-video" autoplay loop muted playsinline>
+    <source src="assets/video-01.mp4" type="video/mp4">
+  </video>
+  <div class="hero-scrim"></div>
+  <div class="hero-inner">
+    <span class="mono" style="color:#D8D4C8;">Itapetininga, SP — Vídeos &amp; Fotos</span>
+    <h1 style="color:#fff;">Venda mais imóveis através das <span style="color:#D8D4C8;">redes sociais com vídeos profissionais</span>.</h1>
+    <p style="color:#fff;opacity:0.82;">Produções audiovisuais e posicionamento digital para o setor imobiliário — vídeos e fotos que aumentam as visitas e aceleram a venda.</p>
+    <div class="hero-actions">
+      <a href="#contato" class="btn solid">Agendar Gravação</a>
+      <a href="#portfolio" class="btn ghost" style="border-color:#fff;color:#fff;">Ver Portfólio</a>
+    </div>
+  </div>
+</header>
+
+<div class="dark-section">
+  <div class="trust-bar">
+    <div class="trust-item"><div class="trust-num">+320</div><div class="trust-label">Imóveis gravados</div></div>
+    <div class="trust-item"><div class="trust-num">3 dias</div><div class="trust-label">Entrega expressa (sob consulta)</div></div>
+    <div class="trust-item"><div class="trust-num">+3 anos</div><div class="trust-label">No mercado</div></div>
+  </div>
+</div>
+
+<section id="portfolio">
+  <div class="section-head">
+    <h2>Fotos que mostram o imóvel por inteiro.</h2>
+    <p>Uma seleção dos últimos trabalhos — imóveis de alto padrão em condomínios fechados.</p>
+  </div>
+  <div class="portfolio-grid-v2">
+    <div class="pf-carousel" data-images='["assets/image-02.jpg", "assets/image-03.jpg", "assets/image-04.jpg", "assets/image-05.jpg", "assets/image-06.jpg"]'>
+      <img class="pf-carousel-img active" src="assets/image-07.jpg" alt="Casa Espaço Verde II">
+      <div class="pf-overlay"><span class="mono">Fotografia Imobiliária</span><h3>Casa Espaço Verde II</h3></div>
+      <div class="pf-dots"></div>
+    </div>
+    <div class="pf-carousel" data-images='["assets/image-08.jpg", "assets/image-09.jpg", "assets/image-10.jpg", "assets/image-11.jpg"]'>
+      <img class="pf-carousel-img active" src="assets/image-12.jpg" alt="Casa Alto Padrão Vista Lago">
+      <div class="pf-overlay"><span class="mono">Fotografia Imobiliária</span><h3>Casa Alto Padrão — Vista para o Lago</h3></div>
+      <div class="pf-dots"></div>
+    </div>
+      <div class="pf-carousel" data-images='["assets/image-13.jpg", "assets/image-14.jpg", "assets/image-15.jpg", "assets/image-16.jpg"]'>
+      <img class="pf-carousel-img active" src="assets/image-17.jpg" alt="Casa Taciele Alcoléia">
+      <div class="pf-overlay"><span class="mono">Fotografia Imobiliária</span><h3>Casa Taciele Alcoléia — Espaço Verde II</h3></div>
+      <div class="pf-dots"></div>
+    </div>
+  </div>
+  <div class="reels-row">
+    <div class="pf-video-card" data-reel>
+      <video class="pf-video" autoplay loop muted playsinline>
+        <source src="assets/video-02.mp4" type="video/mp4">
+      </video>
+      <div class="pf-overlay"><span class="mono">Reel Institucional</span><h3>Posicionamento Digital</h3></div>
+      <button class="mute-btn" aria-label="Ativar som">
+      <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+      <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+    </button>
+    </div>
+    <div class="pf-video-card" data-reel>
+      <video class="pf-video" autoplay loop muted playsinline>
+        <source src="assets/video-03.mp4" type="video/mp4">
+      </video>
+      <div class="pf-overlay"><span class="mono">Reel Apresentação</span><h3>Apresentação Imobiliária</h3></div>
+      <button class="mute-btn" aria-label="Ativar som">
+      <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+      <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+    </button>
+    </div>
+    <div class="pf-video-card" data-reel>
+      <video class="pf-video" autoplay loop muted playsinline>
+        <source src="assets/video-04.mp4" type="video/mp4">
+      </video>
+      <div class="pf-overlay"><span class="mono">Reel Apresentação</span><h3>Reels Takes</h3></div>
+      <button class="mute-btn" aria-label="Ativar som">
+      <svg class="icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>
+      <svg class="icon-unmuted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+    </button>
+    </div>
+  </div>
+  <div class="youtube-callout">
+    <div class="youtube-callout-text">
+      <span class="mono">No YouTube</span>
+      <h3>Tours completos, não só reels.</h3>
+      <p>Além dos vídeos curtos pra chamar atenção nas redes, também gravo tours completos no YouTube — um passeio bem mais detalhado pelo imóvel, ambiente por ambiente.</p>
+    </div>
+    <div class="youtube-embed-wrap">
+      <iframe class="youtube-embed" src="https://www.youtube.com/embed/zTNBHiMrHMc?rel=0" title="Tour completo no YouTube — CipolliFilms" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </div>
+  </div>
+</section>
+
+<section class="dark-section" id="servicos">
+  <div class="section-head">
+    <h2>O que a CipolliFilms faz.</h2>
+    <p>Foco em imóveis — os outros serviços ficam disponíveis para quem já conhece o trabalho.</p>
+  </div>
+  <div class="service-row"><span class="tc-time">01</span><h3>Vídeos Imobiliários</h3><span class="desc">Reels e vídeos completos de imóveis para imobiliárias, corretores e proprietários — o carro-chefe da CipolliFilms.</span><span class="tag primary">Especialidade</span></div>
+  <div class="service-row"><span class="tc-time">02</span><h3>Fotografia de Imóveis</h3><span class="desc">Fotos profissionais de casas para imobiliárias e arquitetos.</span><span class="tag">Serviço</span></div>
+  <div class="service-row"><span class="tc-time">03</span><h3>Vídeos para Escritórios &amp; Consultórios</h3><span class="desc">Vídeos institucionais para advogados, dentistas, clínicas e qualquer negócio com um espaço físico que vale a pena mostrar.</span><span class="tag">Serviço</span></div>
+  <div class="service-row"><span class="tc-time">04</span><h3>Casamentos</h3><span class="desc">Cobertura completa — cerimônia, festa e making of — além de vídeos de bastidores para bandas, assessores, cerimonialistas, fotógrafos e outros profissionais do setor divulgarem o trabalho deles.</span><span class="tag">Sob indicação</span></div>
+  <div class="service-row"><span class="tc-time">05</span><h3>Festas</h3><span class="desc">Festa de 15 anos, festas infantis e outras celebrações.</span><span class="tag">Serviço</span></div>
+  <div class="service-row"><span class="tc-time">06</span><h3>Ensaios Fotográficos</h3><span class="desc">Ensaios ao ar livre e em locações variadas.</span><span class="tag">Serviço</span></div>
+</section>
+
+<section id="como-funciona">
+  <div class="section-head">
+    <h2>Como funciona, do início ao fim.</h2>
+    <p>Um guia rápido pra entender os produtos e o passo a passo até o vídeo pronto na sua mão.</p>
+  </div>
+
+  <h3 class="cf-subhead">O que significa cada entrega</h3>
+  <div class="glossary-grid">
+    <div class="glossary-item">
+      <span class="mono">Vertical · Redes sociais</span>
+      <h4>Reels Apresentação</h4>
+      <p>Vídeo curto com o corretor aparecendo, apresentando o imóvel, com letterings guiando a narrativa.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> gera conexão direta entre quem assiste e o corretor, aumentando a chance de a pessoa procurar você diretamente, em vez de outro concorrente do mesmo anúncio.</p>
+    </div>
+    <div class="glossary-item">
+      <span class="mono">Vertical · Redes sociais</span>
+      <h4>Reels Takes</h4>
+      <p>Vídeo curto e dinâmico do imóvel, com cortes rápidos, trilha e ritmo — pensado como um vídeo coringa, sem nenhum corretor aparecendo.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> como ninguém aparece no vídeo, qualquer corretor da imobiliária pode postar nas próprias redes, sem parecer que é de outro colega — todo o time divulga o mesmo imóvel.</p>
+    </div>
+    <div class="glossary-item">
+      <span class="mono">Horizontal · YouTube</span>
+      <h4>Vídeo de YouTube</h4>
+      <p>Tour completo, ambiente por ambiente, bem mais detalhado que os reels.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> deixa o anúncio nos portais imobiliários mais completo, o que melhora o desempenho dele — e a pessoa já conhece bem o imóvel antes de agendar visita, evitando visitas de curiosos.</p>
+    </div>
+    <div class="glossary-item">
+      <span class="mono">Fotografia</span>
+      <h4>Foto HDR</h4>
+      <p>Técnica que combina várias exposições da mesma cena, equilibrando a luz de dentro e de fora — evitando janelas "estouradas" de branco.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> anúncios com fotos de alto padrão têm performance melhor nos portais imobiliários — atraem mais cliques e visitas qualificadas.</p>
+    </div>
+    <div class="glossary-item">
+      <span class="mono">Planejamento</span>
+      <h4>Roteiro</h4>
+      <p>Antes de gravar, defino quais ambientes, ângulos e ordem contam melhor a história daquele imóvel específico.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> evita gravação perdida e garante que o diferencial do imóvel apareça — tempo otimizado no dia da gravação.</p>
+    </div>
+    <div class="glossary-item">
+      <span class="mono">Pós-produção</span>
+      <h4>Edição</h4>
+      <p>Corte, cor, trilha sonora e ritmo — é o que transforma o material bruto gravado no imóvel em um vídeo pronto pra postar.</p>
+      <p class="glossary-benefit"><strong>Vantagem:</strong> é o que separa um vídeo amador de um vídeo que realmente vende — ritmo e corte bem feitos prendem atenção até o final.</p>
+    </div>
+  </div>
+
+  <div class="cf-journey-dark">
+  <h3 class="cf-subhead cf-subhead-dark">A jornada, passo a passo</h3>
+  <div class="journey">
+    <div class="journey-step"><span class="tc-time">01</span><h4>Você conhece o trabalho</h4><p>Pelo site, Instagram ou indicação de outro corretor/imobiliária.</p></div>
+    <div class="journey-step"><span class="tc-time">02</span><h4>Escolhe o pacote ideal</h4><p>Essencial, Completo, ou o formulário de parceria pra quem grava vários imóveis por mês.</p></div>
+    <div class="journey-step"><span class="tc-time">03</span><h4>Agendamos a gravação</h4><p>Data, horário e endereço combinados por WhatsApp.</p></div>
+    <div class="journey-step"><span class="tc-time">04</span><h4>Você prepara o imóvel</h4><p>Limpo, arrumado e, se possível, no melhor horário de luz natural.</p></div>
+    <div class="journey-step"><span class="tc-time">05</span><h4>Dia da gravação</h4><p>Capto fotos e vídeo seguindo o roteiro pensado pra esse imóvel.</p></div>
+    <div class="journey-step"><span class="tc-time">06</span><h4>Edição</h4><p>Corte, cor, trilha e ajustes — transformando o material bruto no vídeo final.</p></div>
+    <div class="journey-step"><span class="tc-time">07</span><h4>Entrega</h4><p>Vídeo e fotos prontos, no prazo combinado, já formatados pra postar.</p></div>
+  </div>
+
+  <div class="cf-video-placeholder">
+    <span class="mono">Em breve</span>
+    <p>Vídeo explicativo gravado no escritório, mostrando na prática cada uma dessas etapas.</p>
+  </div>
+  </div>
+</section>
+
+<section id="pacotes">
+  <div class="section-head">
+    <h2>Escolha o pacote e já garanta a data.</h2>
+    <p>Pacotes exclusivos para <strong>vídeos e fotos de imóveis</strong> — outros serviços são orçados sob consulta. Preços exemplificativos, ajuste com seus valores reais.</p>
+  </div>
+  <span class="mono pkg-block-label">Avulso — pra um imóvel específico</span>
+  <div class="pkg-grid">
+    <div class="pkg-card">
+      <h3>Avulso Simples</h3>
+      <div class="pkg-price">R$ 450 <span>/ imóvel</span></div>
+      <ul class="pkg-list">
+        <li>1 Reels Apresentação</li>
+        <li>1 Reels Takes</li>
+        <li>Captação em 1 visita (até 1h)</li>
+        <li>Roteiro personalizado</li>
+        <li>Edição</li>
+        <li>Entrega em até 7 dias</li>
+      </ul>
+      <a href="#contato" class="btn ghost">Quero este pacote</a>
+    </div>
+    <div class="pkg-card featured">
+      <span class="pkg-badge">Mais procurado</span>
+      <h3>Avulso Completo</h3>
+      <div class="pkg-price">R$ 1.100 <span>/ imóvel</span></div>
+      <ul class="pkg-list">
+        <li>Tudo do Avulso Simples</li>
+        <li>Fotos HDR do imóvel incluídas</li>
+        <li>1 vídeo para YouTube (tour completo)</li>
+        <li>Entrega em até 7 dias (expresso em 3 dias, sob consulta)</li>
+      </ul>
+      <a href="#contato" class="btn solid">Quero este pacote</a>
+    </div>
+  </div>
+
+  <div class="pkg-section-divider"></div>
+
+  <div class="pkg-monthly-block">
+    <span class="mono pkg-block-label">Pacotes mensais — pra quem grava com regularidade</span>
+    <div class="monthly-grid">
+    <div class="pkg-card">
+      <h3>Corretor</h3>
+      <div class="pkg-price">Sob consulta</div>
+      <ul class="pkg-list">
+        <li>4 vídeos por mês</li>
+        <li>Mix de Reels Apresentação e Posicionamento Digital</li>
+        <li>Fotos HDR incluídas</li>
+      </ul>
+      <a href="#imobiliaria-form" class="btn ghost">Quero esse plano</a>
+    </div>
+    <div class="pkg-card featured">
+      <span class="pkg-badge">Grupo pequeno</span>
+      <h3>Equipe</h3>
+      <div class="pkg-price">Sob consulta</div>
+      <ul class="pkg-list">
+        <li>6 vídeos por mês</li>
+        <li>Ideal pra 2-3 corretores dividindo o pacote</li>
+        <li>Mix de Reels Apresentação e Reels Takes (vídeo coringa, sem corretor aparecendo)</li>
+        <li>Fotos HDR incluídas</li>
+        <li>1 vídeo de YouTube por mês incluso</li>
+      </ul>
+      <a href="#imobiliaria-form" class="btn solid">Quero esse plano</a>
+    </div>
+    <div class="pkg-card">
+      <h3>Imobiliária</h3>
+      <div class="pkg-price">Sob consulta</div>
+      <ul class="pkg-list">
+        <li>8 vídeos por mês</li>
+        <li>Mix de Reels Apresentação e Reels Takes</li>
+        <li>Fotos HDR em todos os imóveis</li>
+        <li>2 vídeos de YouTube por mês inclusos</li>
+        <li>Prioridade de agenda</li>
+      </ul>
+      <a href="#imobiliaria-form" class="btn ghost">Quero esse plano</a>
+    </div>
+  </div>
+
+  <div class="pkg-card pkg-card-form" id="imobiliaria-form">
+      <h3>Monte seu plano mensal</h3>
+      <p class="pkg-form-intro">Pacotes pensados pra corretores e imobiliárias que trabalham com imóveis de alto padrão — onde um vídeo bem feito paga a si mesmo na primeira comissão. Adicione os itens que fazem sentido pro seu negócio e retornamos com uma proposta.</p>
+      <form id="leadForm" class="pkg-form">
+        <div class="plan-builder">
+      <div class="plan-row">
+        <span class="plan-row-label">Reels Apresentação</span>
+        <div class="plan-stepper">
+          <button type="button" class="plan-btn" data-action="minus" data-target="qty-apresentacao">&#8722;</button>
+          <span class="plan-value" data-display="qty-apresentacao">0</span>
+          <button type="button" class="plan-btn" data-action="plus" data-target="qty-apresentacao">+</button>
+          <input type="hidden" id="qty-apresentacao" value="0">
+        </div>
+      </div>
+      <div class="plan-row">
+        <span class="plan-row-label">Reels Takes</span>
+        <div class="plan-stepper">
+          <button type="button" class="plan-btn" data-action="minus" data-target="qty-takes">&#8722;</button>
+          <span class="plan-value" data-display="qty-takes">0</span>
+          <button type="button" class="plan-btn" data-action="plus" data-target="qty-takes">+</button>
+          <input type="hidden" id="qty-takes" value="0">
+        </div>
+      </div>
+      <div class="plan-row">
+        <span class="plan-row-label">Posicionamento Digital</span>
+        <div class="plan-stepper">
+          <button type="button" class="plan-btn" data-action="minus" data-target="qty-posicionamento">&#8722;</button>
+          <span class="plan-value" data-display="qty-posicionamento">0</span>
+          <button type="button" class="plan-btn" data-action="plus" data-target="qty-posicionamento">+</button>
+          <input type="hidden" id="qty-posicionamento" value="0">
+        </div>
+      </div>
+      <div class="plan-row">
+        <span class="plan-row-label">Vídeo de YouTube</span>
+        <div class="plan-stepper">
+          <button type="button" class="plan-btn" data-action="minus" data-target="qty-youtube">&#8722;</button>
+          <span class="plan-value" data-display="qty-youtube">0</span>
+          <button type="button" class="plan-btn" data-action="plus" data-target="qty-youtube">+</button>
+          <input type="hidden" id="qty-youtube" value="0">
+        </div>
+      </div>
+      <div class="plan-row">
+        <span class="plan-row-label">Fotos HDR (imóveis/mês)</span>
+        <div class="plan-stepper">
+          <button type="button" class="plan-btn" data-action="minus" data-target="qty-hdr">&#8722;</button>
+          <span class="plan-value" data-display="qty-hdr">0</span>
+          <button type="button" class="plan-btn" data-action="plus" data-target="qty-hdr">+</button>
+          <input type="hidden" id="qty-hdr" value="0">
+        </div>
+      </div>
+    </div>
+        <label>Orçamento mensal disponível *
+          <select required>
+            <option value="">Selecione</option>
+            <option>Até R$ 2.000</option>
+            <option>R$ 2.000 - R$ 5.000</option>
+            <option>R$ 5.000 - R$ 10.000</option>
+            <option>Acima de R$ 10.000</option>
+          </select>
+        </label>
+        <label>Voce e *
+          <select required>
+            <option value="">Selecione</option>
+            <option>Corretor autonomo</option>
+            <option>Imobiliaria</option>
+          </select>
+        </label>
+        <label>E-mail *
+          <input type="email" required placeholder="seu@email.com">
+        </label>
+        <label>Celular / WhatsApp *
+          <input type="tel" required placeholder="(15) 90000-0000">
+        </label>
+        <button type="submit" class="btn solid" style="width:100%;text-align:center;">Enviar</button>
+      </form>
+      <div id="leadFormSuccess" style="display:none;">
+        <p style="font-size:14px;opacity:0.75;">Recebido! Vamos entrar em contato em breve.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="dark-section" id="depoimentos">
+  <div class="section-head">
+    <h2>Quem gravou, recomenda.</h2>
+    <p>Depoimentos reais de corretores e imobiliárias parceiras.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <p class="testi-quote">"Parabéns, vídeo top. Curti muito essa transição na piscina."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-18.jpg" alt=""></div><div class="testi-name">Luís Gustavo — Corretor, Albor Imobiliária</div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Fizemos milagre com essa casa! Ficou muito massa, parabéns pelo trabalho."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-19.jpg" alt=""></div><div class="testi-name">Lucas Cruz — Corretor de Imóveis</div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Ficou animal! Sorte que esse trabalho é nosso."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-20.jpg" alt=""></div><div class="testi-name">Mickael Galassi — G2 Galassi Imóveis</div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Que vídeo incrível! Nível cinema mesmo. Fico muito feliz de ter você na nossa equipe — você está cada gravação melhor."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-21.jpg" alt=""></div><div class="testi-name">Samuel Bicudo — Gerente, Imobiliária Seven</div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Subiu o nível! Parabéns, você está cada dia melhor."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-22.jpg" alt=""></div><div class="testi-name">Mickaio Galassi — G2 Galassi Imóveis</div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">"Muito fera! Um trabalho de altíssimo nível."</p>
+      <div class="testi-person"><div class="testi-avatar"><img src="assets/image-23.jpg" alt=""></div><div class="testi-name">Roberto — Proprietário, Imobiliária Seven</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="sobre">
+  <div class="about">
+    <div class="about-logo-card">
+      <img src="assets/image-02.png" alt="Logo CipolliFilms" class="about-logo-img">
+    </div>
+    <div>
+      <span class="mono">Sobre a CipolliFilms</span>
+      <h2>Filmmaker baseado em Itapetininga, contando a história de cada imóvel.</h2>
+      <p>Nem sempre quem conta as histórias aparece nelas. A paixão pelo audiovisual faz parte da minha vida desde a infância, quando tudo isso era apenas um interesse e eu nem imaginava onde poderia chegar. Hoje, essa mesma paixão está presente em cada gravação, cada edição e em cada história que tenho o privilégio de registrar através da CipolliFilms.</p>
+      <div class="stat-row">
+        <div><div class="stat-num">Todo o mundo</div><div class="stat-label">Área de atendimento</div></div>
+        <div><div class="stat-num">@cipollifilms</div><div class="stat-label">Instagram</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="section-head">
+    <h2>Perguntas Frequentes.</h2>
+    <p>Tirando as dúvidas mais comuns antes de fechar.</p>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question">Como funciona a precificação?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>O valor depende do pacote escolhido — Essencial, Completo ou Imobiliária (para quem grava vários imóveis por mês). Pacotes avulsos têm preço fechado; parcerias de volume são combinadas conforme a quantidade de imóveis.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Como funciona o pagamento?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Sinal na contratação para garantir a data, e o restante na entrega do vídeo final. Para parcerias de volume, o pagamento é combinado conforme o acordo mensal.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Posso pedir ajustes se eu não gostar de algo?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Sim. Cada pacote inclui uma rodada de ajustes no vídeo — cortes, ritmo, trilha — sem custo adicional, para garantir que o resultado final está do jeito que você precisa.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Os vídeos ficam protegidos contra uso por outra imobiliária?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Sim, é possível incluir marca d'água para proteger o material do imóvel — muito usado por imobiliárias que querem evitar que o vídeo seja aproveitado por outros anunciantes do mesmo imóvel.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Qual o prazo de entrega?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>O prazo padrão é de até 7 dias. Entrega expressa em 3 dias está disponível como adicional, sob consulta.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Quais equipamentos vocês usam?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Câmera Sony A7V, com lente Laowa 10mm sem distorção (pra deixar os ambientes bem amplos) e Tamron 28-75mm para detalhes e falas do corretor, com aquele desfoque profissional. A estabilização é feita com gimbal profissional, garantindo movimentos suaves e cinematográficos.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Vocês fazem imagens aéreas com drone?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Sim, sob consulta — usamos um DJI Mini 5 Pro pra imagens aéreas quando o imóvel se beneficia dessa visão, como terrenos grandes, condomínios e vistas panorâmicas.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Em qual qualidade os vídeos são gravados?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Todo o material é gravado em 4K, garantindo a melhor qualidade de imagem — tanto para o vídeo principal quanto para os cortes usados nas redes sociais.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Vocês emitem nota fiscal / fazem contrato?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Sim, é possível formalizar com contrato de prestação de serviço — principalmente em parcerias de volume com imobiliárias.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Preciso estar presente durante a gravação?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Não é obrigatório, mas ajuda — principalmente quando o vídeo inclui o corretor apresentando o imóvel. Se preferir não participar, o vídeo é gravado só do espaço.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Vocês se deslocam para outras cidades?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Atendimento em todo o mundo. A base é em Itapetininga, SP — deslocamentos para outras localidades podem ter custo adicional, dependendo da distância.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Preciso fornecer algo antes da gravação?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>Só o imóvel pronto para ser mostrado (limpo e arrumado) e, se possível, os melhores horários de luz natural. O resto — roteiro, enquadramento e edição — é por conta da CipolliFilms.</p></div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question">Recebo os arquivos brutos, além do vídeo editado?<span class="faq-icon">+</span></button>
+      <div class="faq-answer"><p>O material bruto não faz parte da entrega padrão — você recebe o vídeo já editado e pronto para postar. Arquivos brutos podem ser negociados à parte, conforme o acordo.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="cta dark-section" id="contato">
+  <span class="mono">Vamos gravar seu imóvel</span>
+  <h2>Marque uma data e deixe o imóvel falar por si.</h2>
+  <p>Resposta rápida pelo Instagram ou WhatsApp — conte o endereço, o estilo do imóvel e a data desejada.</p>
+  <a href="https://wa.me/5511940209633" target="_blank" class="btn solid">Agendar pelo WhatsApp</a>
+</section>
+
+<footer>
+  <div class="logo" style="color:var(--ink);"><img src="assets/image-03.png" alt="CipolliFilms" class="footer-logo-icon">cipollifilms</div>
+  <div class="navlinks">
+    <a href="https://instagram.com/cipollifilms" target="_blank">Instagram</a>
+    <a href="https://wa.me/5511940209633" target="_blank">WhatsApp</a>
+    <a href="https://instagram.com/cipollifilms" target="_blank">@cipollifilms</a>
+  </div>
+  <span>© 2026 CipolliFilms — Itapetininga, SP</span>
+</footer>
+
+<script>
+  // Reveal ao rolar a página
+  (function(){
+    var selectors = [
+      '.section-head', '.pf-carousel', '.pf-video-card',
+      '.service-row', '.pkg-card', '.testi-card', '.faq-item',
+      '.about img, .about-logo-card, .about > div > span.mono, .about h2, .about p, .about .stat-row'
+    ];
+    var els = document.querySelectorAll(selectors.join(','));
+    els.forEach(function(el, i){
+      el.classList.add('reveal');
+      el.style.transitionDelay = (Math.min(i % 6, 5) * 0.08) + 's';
+    });
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.15, rootMargin: '0px 0px -40px 0px'});
+    els.forEach(function(el){ observer.observe(el); });
+  })();
+
+  // Contador animado da prova social
+  (function(){
+    var nums = document.querySelectorAll('.trust-num');
+    var done = false;
+    function animateCount(el){
+      var text = el.textContent.trim();
+      var match = text.match(/^([^\d]*)(\d+)(.*)$/);
+      if(!match){ return; }
+      var prefix = match[1], target = parseInt(match[2], 10), suffix = match[3];
+      var start = 0, duration = 1200, startTime = null;
+      function step(ts){
+        if(!startTime) startTime = ts;
+        var progress = Math.min((ts - startTime) / duration, 1);
+        var value = Math.floor(progress * target);
+        el.textContent = prefix + value + suffix;
+        if(progress < 1){ requestAnimationFrame(step); }
+        else { el.textContent = prefix + target + suffix; }
+      }
+      requestAnimationFrame(step);
+    }
+    var trustBar = document.querySelector('.trust-bar');
+    if(trustBar){
+      var trustObserver = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          if(entry.isIntersecting && !done){
+            done = true;
+            nums.forEach(animateCount);
+            trustObserver.disconnect();
+          }
+        });
+      }, {threshold: 0.4});
+      trustObserver.observe(trustBar);
+    }
+  })();
+
+  // Montador de plano mensal — stepper de + e -
+  document.querySelectorAll('.plan-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = document.getElementById(btn.dataset.target);
+      var display = document.querySelector('[data-display="' + btn.dataset.target + '"]');
+      var val = parseInt(input.value || '0', 10);
+      val = btn.dataset.action === 'plus' ? val + 1 : Math.max(0, val - 1);
+      input.value = val;
+      display.textContent = val;
+    });
+  });
+
+  // Formulario de qualificacao (Imobiliaria/Volume)
+  var leadForm = document.getElementById('leadForm');
+  if(leadForm){
+    leadForm.addEventListener('submit', function(e){
+      e.preventDefault();
+      leadForm.style.display = 'none';
+      document.getElementById('leadFormSuccess').style.display = 'block';
+    });
+  }
+
+  // Acordeão do FAQ
+  document.querySelectorAll('.faq-question').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var item = btn.closest('.faq-item');
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(function(i){ i.classList.remove('open'); });
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // Menu mobile
+  var hamburgerBtn = document.getElementById('hamburgerBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if(hamburgerBtn){
+    hamburgerBtn.addEventListener('click', function(){
+      mobileMenu.classList.toggle('open');
+    });
+    mobileMenu.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ mobileMenu.classList.remove('open'); });
+    });
+  }
+
+  // Carrossel com transição automática + setas manuais
+  document.querySelectorAll('.pf-carousel').forEach(function(carousel){
+    var images = JSON.parse(carousel.dataset.images);
+    var imgEl = carousel.querySelector('.pf-carousel-img');
+    var dotsWrap = carousel.querySelector('.pf-dots');
+    images.forEach(function(_, i){
+      var d = document.createElement('span');
+      if(i===0) d.classList.add('active');
+      dotsWrap.appendChild(d);
+    });
+    var dots = dotsWrap.querySelectorAll('span');
+    var idx = 0;
+    var timer = null;
+
+    function showSlide(newIdx){
+      idx = (newIdx + images.length) % images.length;
+      var next = document.createElement('img');
+      next.className = 'pf-carousel-img';
+      next.src = images[idx];
+      carousel.insertBefore(next, dotsWrap);
+      requestAnimationFrame(function(){ next.classList.add('active'); });
+      var current = imgEl;
+      setTimeout(function(){ if(current && current.parentNode) current.remove(); }, 1200);
+      imgEl = next;
+      dots.forEach(function(d,i2){ d.classList.toggle('active', i2===idx); });
+    }
+
+    function startAuto(){
+      timer = setInterval(function(){ showSlide(idx+1); }, 3800);
+    }
+    function restartAuto(){
+      clearInterval(timer);
+      startAuto();
+    }
+    startAuto();
+
+    var prevBtn = document.createElement('button');
+    prevBtn.className = 'pf-nav pf-nav-prev';
+    prevBtn.setAttribute('aria-label','Foto anterior');
+    prevBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>';
+    var nextBtn = document.createElement('button');
+    nextBtn.className = 'pf-nav pf-nav-next';
+    nextBtn.setAttribute('aria-label','Próxima foto');
+    nextBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>';
+    prevBtn.addEventListener('click', function(){ showSlide(idx-1); restartAuto(); });
+    nextBtn.addEventListener('click', function(){ showSlide(idx+1); restartAuto(); });
+    carousel.appendChild(prevBtn);
+    carousel.appendChild(nextBtn);
+  });
+
+  // Toggle de áudio para cada vídeo reel
+  document.querySelectorAll('[data-reel]').forEach(function(wrap){
+    var video = wrap.querySelector('video');
+    var btn = wrap.querySelector('.mute-btn');
+    var iconMuted = wrap.querySelector('.icon-muted');
+    var iconUnmuted = wrap.querySelector('.icon-unmuted');
+    if(btn){
+      btn.addEventListener('click', function(){
+        video.muted = !video.muted;
+        iconMuted.style.display = video.muted ? 'block' : 'none';
+        iconUnmuted.style.display = video.muted ? 'none' : 'block';
+      });
+    }
+  });
+</script>
+</body>
+</html>
