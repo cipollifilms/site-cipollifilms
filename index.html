@@ -670,7 +670,9 @@
   <div class="pkg-card pkg-card-form" id="imobiliaria-form">
       <h3>Monte seu plano mensal</h3>
       <p class="pkg-form-intro">Pacotes pensados pra corretores e imobiliárias que trabalham com imóveis de alto padrão — onde um vídeo bem feito paga a si mesmo na primeira comissão. Adicione os itens que fazem sentido pro seu negócio e retornamos com uma proposta.</p>
-      <form id="leadForm" class="pkg-form">
+      <form id="leadForm" class="pkg-form" name="plano-mensal" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+        <input type="hidden" name="form-name" value="plano-mensal">
+        <p style="display:none;"><label>Não preencha: <input name="bot-field"></label></p>
         <div class="plan-builder">
       <div class="plan-row">
         <span class="plan-row-label">Reels Apresentação</span>
@@ -678,7 +680,7 @@
           <button type="button" class="plan-btn" data-action="minus" data-target="qty-apresentacao">&#8722;</button>
           <span class="plan-value" data-display="qty-apresentacao">0</span>
           <button type="button" class="plan-btn" data-action="plus" data-target="qty-apresentacao">+</button>
-          <input type="hidden" id="qty-apresentacao" value="0">
+          <input type="hidden" id="qty-apresentacao" name="reels_apresentacao" value="0">
         </div>
       </div>
       <div class="plan-row">
@@ -687,7 +689,7 @@
           <button type="button" class="plan-btn" data-action="minus" data-target="qty-takes">&#8722;</button>
           <span class="plan-value" data-display="qty-takes">0</span>
           <button type="button" class="plan-btn" data-action="plus" data-target="qty-takes">+</button>
-          <input type="hidden" id="qty-takes" value="0">
+          <input type="hidden" id="qty-takes" name="reels_takes" value="0">
         </div>
       </div>
       <div class="plan-row">
@@ -696,7 +698,7 @@
           <button type="button" class="plan-btn" data-action="minus" data-target="qty-posicionamento">&#8722;</button>
           <span class="plan-value" data-display="qty-posicionamento">0</span>
           <button type="button" class="plan-btn" data-action="plus" data-target="qty-posicionamento">+</button>
-          <input type="hidden" id="qty-posicionamento" value="0">
+          <input type="hidden" id="qty-posicionamento" name="posicionamento_digital" value="0">
         </div>
       </div>
       <div class="plan-row">
@@ -705,7 +707,7 @@
           <button type="button" class="plan-btn" data-action="minus" data-target="qty-youtube">&#8722;</button>
           <span class="plan-value" data-display="qty-youtube">0</span>
           <button type="button" class="plan-btn" data-action="plus" data-target="qty-youtube">+</button>
-          <input type="hidden" id="qty-youtube" value="0">
+          <input type="hidden" id="qty-youtube" name="video_youtube" value="0">
         </div>
       </div>
       <div class="plan-row">
@@ -714,12 +716,12 @@
           <button type="button" class="plan-btn" data-action="minus" data-target="qty-hdr">&#8722;</button>
           <span class="plan-value" data-display="qty-hdr">0</span>
           <button type="button" class="plan-btn" data-action="plus" data-target="qty-hdr">+</button>
-          <input type="hidden" id="qty-hdr" value="0">
+          <input type="hidden" id="qty-hdr" name="fotos_hdr" value="0">
         </div>
       </div>
     </div>
         <label>Orçamento mensal disponível *
-          <select required>
+          <select name="orcamento" required>
             <option value="">Selecione</option>
             <option>Até R$ 2.000</option>
             <option>R$ 2.000 - R$ 5.000</option>
@@ -728,17 +730,17 @@
           </select>
         </label>
         <label>Voce e *
-          <select required>
+          <select name="tipo_cliente" required>
             <option value="">Selecione</option>
             <option>Corretor autonomo</option>
             <option>Imobiliaria</option>
           </select>
         </label>
         <label>E-mail *
-          <input type="email" required placeholder="seu@email.com">
+          <input type="email" name="email" required placeholder="seu@email.com">
         </label>
         <label>Celular / WhatsApp *
-          <input type="tel" required placeholder="(15) 90000-0000">
+          <input type="tel" name="telefone" required placeholder="(15) 90000-0000">
         </label>
         <button type="submit" class="btn solid" style="width:100%;text-align:center;">Enviar</button>
       </form>
@@ -953,8 +955,19 @@
   if(leadForm){
     leadForm.addEventListener('submit', function(e){
       e.preventDefault();
-      leadForm.style.display = 'none';
-      document.getElementById('leadFormSuccess').style.display = 'block';
+      var formData = new FormData(leadForm);
+      var encoded = new URLSearchParams(formData).toString();
+      fetch('/', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: encoded
+      }).then(function(){
+        leadForm.style.display = 'none';
+        document.getElementById('leadFormSuccess').style.display = 'block';
+      }).catch(function(){
+        leadForm.style.display = 'none';
+        document.getElementById('leadFormSuccess').style.display = 'block';
+      });
     });
   }
 
